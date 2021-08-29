@@ -1,0 +1,26 @@
+Package: grandslamR
+Title: Ball Tracking Data in Professional Tennis
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Peter",
+           family = "Tea",
+           role = c("aut", "cre"),
+           email = "petertea96@gmail.com")
+Description: With the grandslamR package, you can load over 800 matches worth of 
+	ball-tracking data. Each match includes (x,y,z) ball locations, as well as play-by-play
+	features.
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+	dplyr (>= 1.0.6),
+	ggplot2
+Suggests: 
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+

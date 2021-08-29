@@ -1,0 +1,89 @@
+---
+title: "grandslamR - a brief tutorial"
+author: "Peter Tea"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{grandslamR - a brief tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This is a brief tutorial on loading and plotting the [courtvision tracking data](google.com). Please note that the `grandslamR` package is work in progress; if you have any suggestions or bugs to report, please let me know!
+
+## Package Installation
+
+To install the package, 
+```{r, installation, echo = FALSE, message=FALSE}
+#install.packages('grandslamR')
+#library(grandslamR)
+library(ggplot2)
+library(dplyr)
+devtools::load_all()
+```
+
+## Loading Data
+
+There are two options from which you can load in data:
+ - By a single match (using `match_id`)
+ - By a single player (using `player_id`)
+ 
+### Loading Data by Match
+
+Loading by a single match requires you to input a valid `match_id`. All valid match IDs can be found as follows:
+
+```{r, load_available_matches}
+knitr::kable(head(grandslamR::load_available_matches()))
+```
+
+Note that this data source includes a few `doubles matches` -- although the majority of available data are singles matches. Let's take a closer look at the 2019 Roland Garros final between Thiem and Nadal. To load in data from this match, we will need to know it's `match_id`.
+
+```{r, thiem_nadal_example}
+thiem_nadal <- load_complete_match_data(match_id = 'atp_roland_garros_2019_SM001')
+knitr::kable(head(thiem_nadal))
+```
+
+For a better understanding on what each column represents, please check the data dictionary.
+
+### Loading Data by Player Name
+
+```{r, shapovalov_example}
+knitr::kable(head(load_complete_player_data(player_name = 'D.SHAPOVALOV')))
+```
+
+
+## Plotting Data
+
+The `grandslamR` package also supports plotting the spatio-temporal ball tracking data. For example, the following plot illustrates the ball bounce locations on a single rally point (1st set, 7th game, 12th point on 1st serve).
+
+```{r, thiem_nadal_plot, fig.width = 8, fig.height = 5}
+thiem_nadal %>%
+  dplyr::filter(point_ID == '1_7_12_1') %>%
+  dplyr::filter(position == 'bounce') %>%
+ggplot2::ggplot(aes(x = x,
+           y = y)) +
+  gg_fulltenniscourt() +
+  ggplot2::geom_point(alpha = 0.75, fill = 'green', shape = 21,
+             size = 2.5) +
+  ggplot2::geom_path(color = 'white', linetype = 2)
+```
+
+
+### To Do List
+
+Here are a list of items that will hopefully be added in this R package's development.
+
+ - Add in Point Importance Feature  
+ 
+ - Add in processing steps to plot all points on half of a tennis court
+ 
+ - Add in functions to plot shot heatmaps
+ 
+ - Add in functions to interpolate between ball locations
